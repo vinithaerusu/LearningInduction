@@ -10,7 +10,7 @@ if (!GEMINI_API_KEY) {
   process.exit(1);
 }
 
-const MODEL = 'gemini-2.0-flash-lite';
+const MODEL = 'gemini-3.1-flash-lite';
 
 function geminiUrl(model) {
   return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
