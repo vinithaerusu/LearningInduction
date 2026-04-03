@@ -3,6 +3,7 @@ const input = document.getElementById('input');
 const sendBtn = document.getElementById('send');
 
 const messages = [];
+const sessionId = crypto.randomUUID();
 
 function addMessage(role, content) {
   const div = document.createElement('div');
@@ -109,14 +110,14 @@ async function sendMessage() {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages })
+      body: JSON.stringify({ messages, sessionId })
     });
 
     const data = await res.json();
     removeTyping();
 
     if (data.error) {
-      addMessage('assistant', 'Something went wrong. Please try again.');
+      addMessage('assistant', 'Error: ' + data.error);
     } else {
       addMessage('assistant', data.reply);
       messages.push({ role: 'assistant', content: data.reply });

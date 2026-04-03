@@ -4,10 +4,11 @@
   "description": "AI-powered discovery learning - learn by finding patterns, not by reading answers",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node local-server.js",
+    "dev": "node --watch local-server.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.101.1",
     "express": "^4.21.0"
   }
 }
