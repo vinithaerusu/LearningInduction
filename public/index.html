@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearningInduction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>LearningInduction</h1>
+      <p class="subtitle">Learn by discovering patterns, not by reading answers</p>
+    </header>
+
+    <div class="chat" id="chat">
+      <div class="message assistant">
+        <div class="message-content">
+          <p>What do you want to learn? I won't give you the answer — I'll show you the right data points and help you discover it yourself.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <textarea id="input" placeholder="Type what you want to learn..." rows="1"></textarea>
+      <button id="send" aria-label="Send">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
