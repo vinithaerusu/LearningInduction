@@ -1,5 +1,4 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 app.use(express.json());
@@ -9,19 +8,6 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 if (!GEMINI_API_KEY) {
   console.error('GEMINI_API_KEY is required');
   process.exit(1);
-}
-
-// Supabase setup (optional - for logging)
-const SUPABASE_URL = process.env.SUPABASE_URL || '';
-const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
-const supabase = SUPABASE_URL && SUPABASE_KEY
-  ? createClient(SUPABASE_URL, SUPABASE_KEY)
-  : null;
-
-if (supabase) {
-  console.log('Supabase logging enabled');
-} else {
-  console.log('Supabase not configured — logging disabled');
 }
 
 const MODEL = 'gemini-3.1-flash-lite-preview';
@@ -118,22 +104,10 @@ async function callGemini(messages) {
 }
 
 app.post('/api/chat', async (req, res) => {
-  const { messages, sessionId } = req.body;
+  const { messages } = req.body;
 
   try {
     const reply = await callGemini(messages);
-
-    // Log to Supabase if configured
-    if (supabase && sessionId) {
-      const userMsg = messages[messages.length - 1]?.content || '';
-      supabase.from('chat_logs').insert({
-        session_id: sessionId,
-        user_message: userMsg,
-        ai_response: reply,
-        created_at: new Date().toISOString()
-      }).then(() => {}).catch(err => console.error('Supabase log error:', err));
-    }
-
     res.json({ reply });
   } catch (err) {
     console.error('Gemini API error:', err.message);
