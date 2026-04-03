@@ -1,4 +1,5 @@
 const express = require('express');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 app.use(express.json());
@@ -10,7 +11,20 @@ if (!GEMINI_API_KEY) {
   process.exit(1);
 }
 
-const MODEL = 'gemini-3.1-flash-lite';
+// Supabase setup (optional - for logging)
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
+const supabase = SUPABASE_URL && SUPABASE_KEY
+  ? createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
+
+if (supabase) {
+  console.log('Supabase logging enabled');
+} else {
+  console.log('Supabase not configured — logging disabled');
+}
+
+const MODEL = 'gemini-3.1-flash-lite-preview';
 
 function geminiUrl(model) {
   return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
@@ -104,16 +118,34 @@ async function callGemini(messages) {
 }
 
 app.post('/api/chat', async (req, res) => {
-  const { messages } = req.body;
+  const { messages, sessionId } = req.body;
 
   try {
     const reply = await callGemini(messages);
+
+    // Log to Supabase if configured
+    if (supabase && sessionId) {
+      const userMsg = messages[messages.length - 1]?.content || '';
+      supabase.from('chat_logs').insert({
+        session_id: sessionId,
+        user_message: userMsg,
+        ai_response: reply,
+        created_at: new Date().toISOString()
+      }).then(() => {}).catch(err => console.error('Supabase log error:', err));
+    }
+
     res.json({ reply });
   } catch (err) {
     console.error('Gemini API error:', err.message);
-    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    res.status(500).json({ error: err.message });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`LearningInduction running on port ${PORT}`));
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`LearningInduction running on port ${PORT}`));
+}
+
+// For Vercel
+module.exports = app;
