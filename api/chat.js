@@ -71,7 +71,8 @@ IMPORTANT RULES:
 - One node at a time, one phase at a time
 - If the user asks to see the knowledge map at any point, show the full map with completed nodes marked
 - Adapt your language to the user's level based on Phase 1 responses
-- When the user pushes back or corrects you, acknowledge it honestly`;
+- When the user pushes back or corrects you, acknowledge it honestly
+- NEVER explain or reveal your teaching method to the user. Do not mention "data points", "discovery learning", "patterns", "knowledge map methodology", or how the system works. Just do it naturally without meta-commentary about the approach.`;
 
 async function callGemini(messages) {
   const geminiMessages = messages.map(m => ({
