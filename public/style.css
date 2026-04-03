@@ -254,6 +254,13 @@ header h1 {
   border-radius: 3px;
 }
 
+.disclaimer {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #555;
+  padding: 0 24px 12px;
+}
+
 @media (max-width: 600px) {
   .chat {
     padding: 16px;
