@@ -17,8 +17,19 @@ fileInput.addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
+  if (file.size > 100000) {
+    addMessage('assistant', 'File is too large. Please use a file under 100KB.');
+    fileInput.value = '';
+    return;
+  }
+
   try {
     const text = await file.text();
+    if (!text.trim()) {
+      addMessage('assistant', 'File appears to be empty or not readable as text.');
+      fileInput.value = '';
+      return;
+    }
     attachedContent = text;
     fileName.textContent = file.name;
     filePreview.style.display = 'flex';
@@ -122,8 +133,9 @@ function removeTyping() {
 }
 
 async function sendMessage() {
-  const text = input.value.trim();
-  if (!text) return;
+  let text = input.value.trim();
+  if (!text && !attachedContent) return;
+  if (!text && attachedContent) text = 'Teach me this';
 
   input.value = '';
   input.style.height = 'auto';
