@@ -69,7 +69,7 @@ header h1 {
 }
 
 .message.user .message-content {
-  background: #1a3a5c;
+  background: #5c3a1a;
   color: #e0e0e0;
   border-bottom-right-radius: 4px;
 }
@@ -221,7 +221,7 @@ header h1 {
   padding: 12px;
   border: none;
   border-radius: 12px;
-  background: #2a5a8c;
+  background: #8c5a2a;
   color: #fff;
   cursor: pointer;
   display: flex;
@@ -232,7 +232,7 @@ header h1 {
 }
 
 #send:hover {
-  background: #3a6a9c;
+  background: #9c6a3a;
 }
 
 #send:disabled {
