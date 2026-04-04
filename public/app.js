@@ -1,9 +1,37 @@
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const sendBtn = document.getElementById('send');
+const attachBtn = document.getElementById('attach');
+const fileInput = document.getElementById('file-input');
+const filePreview = document.getElementById('file-preview');
+const fileName = document.getElementById('file-name');
+const fileRemove = document.getElementById('file-remove');
 
+let attachedContent = null;
 const messages = [];
 const sessionId = crypto.randomUUID();
+
+attachBtn.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    attachedContent = text;
+    fileName.textContent = file.name;
+    filePreview.style.display = 'flex';
+  } catch (err) {
+    addMessage('assistant', 'Could not read file. Please try a text-based file (.txt, .md, .csv).');
+  }
+  fileInput.value = '';
+});
+
+fileRemove.addEventListener('click', () => {
+  attachedContent = null;
+  filePreview.style.display = 'none';
+});
 
 function addMessage(role, content) {
   const div = document.createElement('div');
@@ -101,8 +129,15 @@ async function sendMessage() {
   input.style.height = 'auto';
   sendBtn.disabled = true;
 
+  let fullContent = text;
+  if (attachedContent) {
+    fullContent = text + '\n\nHere is the learning content:\n\n' + attachedContent;
+    attachedContent = null;
+    filePreview.style.display = 'none';
+  }
+
   addMessage('user', text);
-  messages.push({ role: 'user', content: text });
+  messages.push({ role: 'user', content: fullContent });
 
   showTyping();
 
